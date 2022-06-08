@@ -2,4 +2,4 @@ insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) 
 insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) values (NEXTVAL('hibernate_sequence'), '12222222', 'Juice 2', 'apellido 2', 21, 'avenida 2', 1, 1100);
 insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) values (NEXTVAL('hibernate_sequence'), '13333333', 'Juice 3', 'apellido 3', 22, 'avenida 3', 2, 1200);
 insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) values (NEXTVAL('hibernate_sequence'), '14444444', 'Juice 4', 'apellido 4', 23, 'avenida 4', 2, 1300);
-insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) values (NEXTVAL('hibernate_sequence'), '15555555', 'Juice 5', 'apellido 5', 24, 'avenida 5', 3, 1300);
+insert into empleado (id, dni, nombre, apellido, edad, direccion, rol, salario) values (NEXTVAL('hibernate_sequence'), '15555555', 'Juice 5', 'apellido 5', 24, 'avenida 5', 3, 13EmpleadoRepositorio00);
