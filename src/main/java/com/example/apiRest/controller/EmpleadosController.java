@@ -5,6 +5,7 @@ import com.example.apiRest.controller.DTO.EmpleadoDTOConverter;
 import com.example.apiRest.controller.excepciones.ApiError;
 import com.example.apiRest.controller.excepciones.EmpleadoDuplicado;
 import com.example.apiRest.controller.excepciones.EmpleadoNotFoundException;
+import com.example.apiRest.controller.excepciones.IdisNull;
 import com.example.apiRest.controller.model.Empleado;
 import com.example.apiRest.controller.model.EmpleadoRepositorio;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,13 @@ public class EmpleadosController {
     }
 
     @GetMapping("/getEmpleadosbyId")
-    public Empleado getEmpleadosbyId(@RequestParam Long id) {
-        return empleadoRepositorio.findById(id).orElseThrow(() -> new EmpleadoNotFoundException(id));
+    public Empleado getEmpleadosbyId(@RequestParam(value = "id", required = false) Long id) {
+        if(id==null){
+            throw new IdisNull();
+        }else {
+            return empleadoRepositorio.findById(id).orElseThrow(() -> new EmpleadoNotFoundException(id));
+        }
+
     }
 
     @PutMapping("/putEmpleadosbyId")
@@ -82,7 +88,7 @@ public class EmpleadosController {
         return ResponseEntity.noContent().build();
     }
 
-    //EN EL MOMENTO QUE OCURRE UNA EXCEPCION DE ESTE TIPO LA TRATAMOS NOSTROS PERSONALIZADA
+    //EN EL MOMENTO QUE OCURRE UNA EXCEPCION DE ESTE TIPO LA TRATAMOS NOSOTROS PERSONALIZADA
     @ExceptionHandler(EmpleadoNotFoundException.class)
     public ResponseEntity<ApiError> handlerEmpleadoNotFound(EmpleadoNotFoundException ex) {
 
@@ -102,6 +108,16 @@ public class EmpleadosController {
         apiError.setMensaje(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
+    }
+    @ExceptionHandler(IdisNull.class)
+    public ResponseEntity<ApiError> handlerIdisNull(IdisNull ex) {
+
+        ApiError apiError = new ApiError();
+        apiError.setEstado(HttpStatus.BAD_REQUEST);
+        apiError.setFecha(LocalDateTime.now());
+        apiError.setMensaje(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
 }
