@@ -41,7 +41,8 @@ public class EmpleadosController {
 
     @GetMapping("/getEmpleadosbyId")
     public Empleado getEmpleadosbyId(@RequestParam(value = "id", required = false) Long id) {
-        if(id==null){
+
+        if(id==null || id.equals("")){
             throw new IdisNull();
         }else {
             return empleadoRepositorio.findById(id).orElseThrow(() -> new EmpleadoNotFoundException(id));
@@ -50,18 +51,21 @@ public class EmpleadosController {
     }
 
     @PutMapping("/putEmpleadosbyId")
-    public Empleado modificarEmpleado(@RequestBody Empleado editar, @RequestParam Long id) {
-        return empleadoRepositorio.findById(id).map(e -> {
-            e.setNombre(editar.getNombre());
-            e.setApellido(editar.getApellido());
-            e.setDireccion(editar.getDireccion());
-            e.setDni(editar.getDni());
-            e.setEdad(editar.getEdad());
-            e.setRol(editar.getRol());
-            e.setSalario(editar.getSalario());
-            return empleadoRepositorio.save(e);
-        }).orElseThrow(() -> new EmpleadoNotFoundException(id));
-
+    public Empleado modificarEmpleado(@RequestBody Empleado editar, @RequestParam(value = "id",required = false) Long id) {
+        if (id==null || id.equals("")){
+            throw new IdisNull();
+        }else {
+            return empleadoRepositorio.findById(id).map(e -> {
+                e.setNombre(editar.getNombre());
+                e.setApellido(editar.getApellido());
+                e.setDireccion(editar.getDireccion());
+                e.setDni(editar.getDni());
+                e.setEdad(editar.getEdad());
+                e.setRol(editar.getRol());
+                e.setSalario(editar.getSalario());
+                return empleadoRepositorio.save(e);
+            }).orElseThrow(() -> new EmpleadoNotFoundException(id));
+        }
     }
 
     @PostMapping("/postEmpleado")
