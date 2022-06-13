@@ -1,0 +1,1163 @@
+{
+	"info": {
+		"_postman_id": "4eb5798a-2366-4ff5-9752-082967159c5e",
+		"name": "Api Rest Numa QA",
+		"description": "Práctica de Api Rest para Numa QA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21189057"
+	},
+	"item": [
+		{
+			"name": "Gestión de Empleados",
+			"item": [
+				{
+					"name": "Get Empleados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Validar que es un JSON",
+									"//declaro variable de entorno",
+									"var response = pm.response.json();",
+									"",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"//Codigo bueno ? 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Empleados NOT EMPTY\",function(){",
+									"pm.expect(response.length).not.eql(0);",
+									"});",
+									"",
+									"pm.test(\"Validate Fields DTO\", function(){",
+									"pm.expect(pm.response.text()).to.include(\"nombre\")",
+									"pm.expect(pm.response.text()).to.include(\"apellido\")",
+									"pm.expect(pm.response.text()).to.include(\"dni\")",
+									"pm.expect(pm.response.text()).to.include(\"rol\")",
+									"});",
+									"pm.test(\"NOT NULL (nombre, apellido, dni y rol)\",function(){",
+									"pm.expect(response.nombre).not.null;",
+									"pm.expect(response.apellido).not.null;",
+									"pm.expect(response.dni).not.null;",
+									"pm.expect(response.rol).not.null;",
+									"});",
+									"pm.test(\"Tyte data fields\",function(){",
+									"    //nombre , apellido , dni y rol",
+									"pm.expect(response[0].nombre).to.be.a(\"string\");",
+									"pm.expect(response[1].apellido).to.be.a(\"string\");",
+									"pm.expect(response[2].dni).to.be.a(\"string\");",
+									"pm.expect(response[3].rol).to.be.a(\"number\");",
+									"});",
+									"",
+									"//test del DTO",
+									"",
+									"pm.test(\"Lista de dnis\", function(){",
+									"listDni =[];",
+									"  for (var i=0; i<response.length;i++){",
+									"        listDni.push(response[i].dni);",
+									"     }",
+									"    //pm.expect(response.dni).not.matches(countArr);",
+									"    pm.environment.set(\"listaDni\",listDni);",
+									"})",
+									"//pm.environment.set(\"name\", response[0].nombre);",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleados\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/getEmpleados",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleados"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Empleados",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/getEmpleados",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"getEmpleados"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:08:03 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"nombre\": \"Juice 1\",\n        \"apellido\": \"apellido 1\",\n        \"dni\": \"11111111\",\n        \"rol\": 1\n    },\n    {\n        \"nombre\": \"Juice 2\",\n        \"apellido\": \"apellido 2\",\n        \"dni\": \"12222222\",\n        \"rol\": 1\n    },\n    {\n        \"nombre\": \"Juice 3\",\n        \"apellido\": \"apellido 3\",\n        \"dni\": \"13333333\",\n        \"rol\": 2\n    },\n    {\n        \"nombre\": \"Juice 4\",\n        \"apellido\": \"apellido 4\",\n        \"dni\": \"14444444\",\n        \"rol\": 2\n    },\n    {\n        \"nombre\": \"Juice 5\",\n        \"apellido\": \"apellido 5\",\n        \"dni\": \"15555555\",\n        \"rol\": 3\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Empleados VACIO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleados\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Validar que es un JSON",
+									"//declaro variable global",
+									"var response = pm.response.json();",
+									"",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"//Codigo bueno ? 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Empleados NOT EMPTY\",function(){",
+									"pm.expect(response.length).not.eql(0);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/getEmpleados",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Empleado by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//VAriable global del JSON",
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"//Checkear el id del empleado ",
+									"pm.test(\"Check_ID and ID_not_null and ID_is_Number\",function(){",
+									"    pm.expect(response.id).to.be.a(\"number\");",
+									"    pm.expect(response.id).to.eql(2);",
+									"    pm.expect(response.id).not.eql(null);",
+									"});",
+									"",
+									"pm.test(\"Data correct Id=2\", function(){",
+									"    pm.expect(response.nombre).to.equal(\"Juice 2\");",
+									"    pm.expect(response.dni).to.equal(\"12222222\");",
+									"    pm.expect(response.apellido).to.equal(\"apellido 2\");",
+									"    pm.expect(response.direccion).to.equal(\"avenida 2\");",
+									"    pm.expect(response.rol).to.equal(1);",
+									"    pm.expect(response.salario).to.equal(1100);",
+									"})",
+									"",
+									"",
+									"//Validar name",
+									"//var nombre = \"Juice 2\"",
+									"//pm.test(\"El campo nombre es \" + nombre, function() {",
+									"//    pm.expect(response.nombre).to.equal(\"Juice 2\");",
+									"//});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleadosbyId\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Jamon de bellota\",\n    \"precio\": 123\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/getEmpleadosbyId?id={{Empleadoid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{Empleadoid}}"
+								}
+							]
+						},
+						"description": "Devuelve el empleado con el id puesto en el path : `id`"
+					},
+					"response": [
+						{
+							"name": "Get Empleado by Id=2",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Jamon de bellota\",\n    \"precio\": 123\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/getEmpleadosbyId?id={{Empleadoid}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"getEmpleadosbyId"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{Empleadoid}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:10:22 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"dni\": \"11111111\",\n    \"nombre\": \"Juice 1\",\n    \"apellido\": \"apellido 1\",\n    \"edad\": 20,\n    \"direccion\": \"avenida 1\",\n    \"rol\": 1,\n    \"salario\": 1000\n}"
+						}
+					]
+				},
+				{
+					"name": "Get empleado id=VACIO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleadosbyId\")",
+									"//pm.expect(pm.request.url.getPathWithQuery()).to.eql(\"/getEmpleadosbyId?id=\" + pm.request.url.query.toObject().id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//VAriable global del JSON",
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 400, id VACIO\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/getEmpleadosbyId?id=",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Empleado id=NO ENCONTRADO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleadosbyId\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//VAriable global del JSON",
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 404, id No encontrado\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/getEmpleadosbyId?id=1000",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get empleado id= NOT NUMBER",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleadosbyId\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//VAriable global del JSON",
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"",
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 400, id NOT NUMBER\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/getEmpleadosbyId?id=ee",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"getEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "ee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Empleado by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/putEmpleadosbyId\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"nombre\": \"nombre modificado\",\n\"apellido\": \"apellido modificado\",\n\"direccion\": \"direccion modificado\",\n\"dni\": \"11111133\",\n\"edad\": 33,\n\"rol\": 1,\n\"salario\": 12222\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/putEmpleadosbyId?id={{Empleadoid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"putEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{Empleadoid}}"
+								}
+							]
+						},
+						"description": "Modifica los parámetro de un empleado existente a través de su `id`"
+					},
+					"response": [
+						{
+							"name": "Put Empleado by Id=1",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\"nombre\": \"nombre modificado\",\n\"apellido\": \"apellido modificado\",\n\"direccion\": \"direccion modificado\",\n\"dni\": \"11111133\",\n\"edad\": 33,\n\"rol\": 1,\n\"salario\": 12222\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/putEmpleadosbyId?id={{Empleadoid}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"putEmpleadosbyId"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "{{Empleadoid}}"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:11:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"dni\": \"11111133\",\n    \"nombre\": \"nombre modificado\",\n    \"apellido\": \"apellido modificado\",\n    \"edad\": 33,\n    \"direccion\": \"direccion modificado\",\n    \"rol\": 1,\n    \"salario\": 12222\n}"
+						}
+					]
+				},
+				{
+					"name": "Editar Empleado id=nulo",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/putEmpleadosbyId\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"",
+									"pm.test(\"Status code is 400, Id no existe\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/putEmpleadosbyId?id=",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"putEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Empleado id mal",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/putEmpleadosbyId\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"",
+									"pm.test(\"Status code is 400, Id no existe\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/putEmpleadosbyId?id=111",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"putEmpleadosbyId"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "111"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Empleado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"pm.test(\"Status code is 201, Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/postEmpleado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\"dni\": \"33333333333333333\",\n\"nombre\": \"nombre nuevo2\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/postEmpleado",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"postEmpleado"
+							]
+						},
+						"description": "Crea un nuevo empleado"
+					},
+					"response": [
+						{
+							"name": "Create Empleado",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\n\"dni\": \"33\",\n\"nombre\": \"nombre nuevo\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/postEmpleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"postEmpleado"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:10:52 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 6,\n    \"dni\": \"33\",\n    \"nombre\": \"nombre nuevo\",\n    \"apellido\": \"apellido nuevo\",\n    \"edad\": 0,\n    \"direccion\": null,\n    \"rol\": 3,\n    \"salario\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Empleado Duplicado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"",
+									"pm.test(\"Is a JSON\", function () {",
+									"});",
+									"pm.test(\"Status code is 409, Conlict\", function () {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/postEmpleado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\"dni\": \"33\",\n\"nombre\": \"nombre nuevo\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/postEmpleado",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"postEmpleado"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Crear Empleado Duplicado",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\n\"dni\": \"33\",\n\"nombre\": \"nombre nuevo\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/postEmpleado",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"postEmpleado"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:11:37 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"estado\": \"CONFLICT\",\n    \"fecha\": \"07/06/2022 09:11:37\",\n    \"mensaje\": \"Ya existe el Empleado con DNI : 33\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Empleado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Status code is 204, Delete correct\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/delEmpleado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/delEmpleado?id=4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"delEmpleado"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Empleado Id=5",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/delEmpleado?id={{Empleadoid}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"delEmpleado"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "id",
+											"value": "{{Empleadoid}}"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 07 Jun 2022 07:11:47 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Delete empleado no existente",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/delEmpleado\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404, NOT FOUND EMPLOYE\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/delEmpleado?id=100",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"delEmpleado"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "API REST para la gestión de empleados ..."
+		}
+	]
+}

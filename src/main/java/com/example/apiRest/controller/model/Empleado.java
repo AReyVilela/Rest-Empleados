@@ -17,8 +17,6 @@ public class Empleado {
 
     @Id @GeneratedValue
     private Long id;
-
-
     private String dni;
 
     private String nombre;
