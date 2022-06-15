@@ -17,13 +17,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"//Validar que es un JSON",
-									"//declaro variable de entorno",
 									"var response = pm.response.json();",
 									"",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
-									"//Codigo bueno ? 200",
+									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
@@ -37,31 +37,21 @@
 									"pm.expect(pm.response.text()).to.include(\"dni\")",
 									"pm.expect(pm.response.text()).to.include(\"rol\")",
 									"});",
-									"pm.test(\"NOT NULL (nombre, apellido, dni y rol)\",function(){",
-									"pm.expect(response.nombre).not.null;",
-									"pm.expect(response.apellido).not.null;",
-									"pm.expect(response.dni).not.null;",
-									"pm.expect(response.rol).not.null;",
-									"});",
-									"pm.test(\"Tyte data fields\",function(){",
-									"    //nombre , apellido , dni y rol",
-									"pm.expect(response[0].nombre).to.be.a(\"string\");",
-									"pm.expect(response[1].apellido).to.be.a(\"string\");",
-									"pm.expect(response[2].dni).to.be.a(\"string\");",
-									"pm.expect(response[3].rol).to.be.a(\"number\");",
+									"",
+									"pm.test(\"Type data fields\",function(){",
+									"    for(var i=0 ; i< response.length;i++){",
+									"pm.expect(response[i].nombre).to.be.a(\"string\");",
+									"pm.expect(response[i].apellido).to.be.a(\"string\");",
+									"pm.expect(response[i].dni).to.be.a(\"string\");",
+									"pm.expect(response[i].rol).to.be.a(\"number\");",
+									"    }",
 									"});",
 									"",
-									"//test del DTO",
-									"",
-									"pm.test(\"Lista de dnis\", function(){",
 									"listDni =[];",
 									"  for (var i=0; i<response.length;i++){",
 									"        listDni.push(response[i].dni);",
-									"     }",
-									"    //pm.expect(response.dni).not.matches(countArr);",
+									"    }",
 									"    pm.environment.set(\"listaDni\",listDni);",
-									"})",
-									"//pm.environment.set(\"name\", response[0].nombre);",
 									"",
 									""
 								],
@@ -146,62 +136,6 @@
 					]
 				},
 				{
-					"name": "Get Empleados VACIO",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"//Test para validar la url",
-									"var urlglobal = pm.environment.get(\"url\");",
-									"pm.test(\"Validate URL - PATH\", function(){",
-									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
-									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
-									"pm.expect(pm.request.url.getPath()).to.eql(\"/getEmpleados\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"//Validar que es un JSON",
-									"//declaro variable global",
-									"var response = pm.response.json();",
-									"",
-									"pm.test(\"Is a JSON\", function () {",
-									"});",
-									"//Codigo bueno ? 200",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Empleados NOT EMPTY\",function(){",
-									"pm.expect(response.length).not.eql(0);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/getEmpleados",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"getEmpleados"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get Empleado by Id",
 					"event": [
 						{
@@ -210,7 +144,9 @@
 								"exec": [
 									"//VAriable global del JSON",
 									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -383,8 +319,9 @@
 									"pm.test(\"Status code is 400, id VACIO\", function () {",
 									"    pm.response.to.have.status(400);",
 									"});",
-									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									""
 								],
@@ -440,8 +377,9 @@
 									"pm.test(\"Status code is 404, id No encontrado\", function () {",
 									"    pm.response.to.have.status(404);",
 									"});",
-									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});"
 								],
 								"type": "text/javascript"
@@ -493,10 +431,11 @@
 								"exec": [
 									"//VAriable global del JSON",
 									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									"",
-									"var response = pm.response.json();",
 									"pm.test(\"Status code is 400, id NOT NUMBER\", function () {",
 									"    pm.response.to.have.status(400);",
 									"});",
@@ -535,7 +474,9 @@
 							"script": {
 								"exec": [
 									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									"",
 									"pm.test(\"Status code is 200\", function () {",
@@ -570,7 +511,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"nombre\": \"nombre modificado\",\n\"apellido\": \"apellido modificado\",\n\"direccion\": \"direccion modificado\",\n\"dni\": \"11111133\",\n\"edad\": 33,\n\"rol\": 1,\n\"salario\": 12222\n\n}",
+							"raw": "{\n\"nombre\": \"nombre modificado\",\n\"apellido\": \"apellido modificado\",\n\"direccion\": \"direccion modificado\",\n\"dni\": \"11111133\",\n\"edad\": 33,\n\"rol\": 1,\n\"salario\": 12222\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -680,9 +621,10 @@
 							"script": {
 								"exec": [
 									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
-									"",
 									"pm.test(\"Status code is 400, Id no existe\", function () {",
 									"    pm.response.to.have.status(400);",
 									"});",
@@ -736,9 +678,10 @@
 							"script": {
 								"exec": [
 									"var response = pm.response.json();",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
-									"",
 									"pm.test(\"Status code is 400, Id no existe\", function () {",
 									"    pm.response.to.have.status(400);",
 									"});",
@@ -778,7 +721,9 @@
 								"exec": [
 									"var response = pm.response.json();",
 									"",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									"pm.test(\"Status code is 201, Created\", function () {",
 									"    pm.response.to.have.status(201);",
@@ -894,7 +839,9 @@
 								"exec": [
 									"var response = pm.response.json();",
 									"",
-									"pm.test(\"Is a JSON\", function () {",
+									"pm.test(\"Validate Body and JSON\", function () {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
 									"});",
 									"pm.test(\"Status code is 409, Conlict\", function () {",
 									"    pm.response.to.have.status(409);",
@@ -925,7 +872,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n\"dni\": \"33\",\n\"nombre\": \"nombre nuevo\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+							"raw": "{\n    \"id\": 2,\n    \"dni\": \"11111133\",\n    \"nombre\": \"nombre modificado\",\n    \"apellido\": \"apellido modificado\",\n    \"edad\": 33,\n    \"direccion\": \"direccion modificado\",\n    \"rol\": 1,\n    \"salario\": 12222\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1006,7 +953,6 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"",
 									"pm.test(\"Status code is 204, Delete correct\", function () {",
 									"    pm.response.to.have.status(204);",
 									"});"
