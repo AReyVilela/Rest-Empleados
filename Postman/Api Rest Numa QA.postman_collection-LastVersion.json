@@ -472,7 +472,26 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									""
+									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
+									"    //Empleado nuevo que se añade",
+									"    var response2 = pm.response.json();",
+									"    //Test para validar la edicion",
+									"     pm.test(\"Validate Edited Employe\", function(){",
+									"         //For para ver si los campos editados existen en el Json",
+									"        for(var i=0; i<response.length;i++){",
+									"                //Verifico la Edicion",
+									"            pm.expect(response[i].nombre).include(response2.nombre);",
+									"            pm.expect(response[i].apellido).include(response2.apellido);",
+									"            pm.expect(response[i].direccion).include(response2.direccion);",
+									"            pm.expect(response[i].dni).include(response2.dni);",
+									"            pm.expect(response[i].edad).include(response2.edad);",
+									"            pm.expect(response[i].rol).include(response2.rol);",
+									"            pm.expect(response[i].salario).include(response2.salario);",
+									"",
+									"         }",
+									"",
+									"     });",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -714,10 +733,25 @@
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
+									"",
 									"pm.test(\"Status code is 201, Created\", function () {",
 									"    pm.response.to.have.status(201);",
 									"});",
 									"",
+									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
+									"    //Empleado nuevo que se añade",
+									"    var response2 = pm.response.json();",
+									"    //Test para validar creacion",
+									"     pm.test(\"Validate Created Employe\", function(){",
+									"         //For para ver si el dni esta incluido en el json",
+									"        for(var i=0; i<response.length;i++){",
+									"                //Busco si existe el dni del empleado creado",
+									"            pm.expect(response[i].dni).include(response2.dni);",
+									"",
+									"         }",
+									"",
+									"     });",
+									"});",
 									""
 								],
 								"type": "text/javascript"
@@ -744,7 +778,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n\"dni\": \"33333333333333333\",\n\"nombre\": \"nombre nuevo2\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+							"raw": "{\n\n\"dni\": \"3310\",\n\"nombre\": \"nombre nuevo2\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -942,8 +976,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 204, Delete correct\", function () {",
-									"    pm.response.to.have.status(204);",
+									"var idDeleted= pm.environment.get(\"Empleadoid\");",
+									"pm.sendRequest(\"localhost:8080/getEmpleadosbyId?id=\" + idDeleted, function (err, response) {",
+									"//hago la reuest a Get empleado By Id por el id borrado lo qe tiene q devolver 204.",
+									"    pm.test(\"Status code is 204 or 404, Not Content or Not Found\", function () { ",
+									"        const expectedStatusCodes = [204, 404];",
+									"        pm.expect(pm.response.code).to.be.oneOf(expectedStatusCodes);",
+									"    });         ",
 									"});"
 								],
 								"type": "text/javascript"
@@ -969,7 +1008,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/delEmpleado?id=4",
+							"raw": "{{url}}/delEmpleado?id={{Empleadoid}}",
 							"host": [
 								"{{url}}"
 							],
@@ -984,7 +1023,7 @@
 								},
 								{
 									"key": "id",
-									"value": "4"
+									"value": "{{Empleadoid}}"
 								}
 							]
 						}
