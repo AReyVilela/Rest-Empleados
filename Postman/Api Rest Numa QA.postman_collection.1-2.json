@@ -50,6 +50,8 @@
 									"    }",
 									"    pm.environment.set(\"listaDni\",listDni);",
 									"",
+									"",
+									"",
 									""
 								],
 								"type": "text/javascript"
@@ -313,7 +315,7 @@
 									"    pm.response.to.be.json;",
 									"});",
 									"//Checkear el id del empleado ",
-									"pm.test(\"Validate ID Is Undefined\",function(){",
+									"pm.test(\"Validate ID Is Empty\",function(){",
 									"    pm.expect(response.id).to.eql(undefined);",
 									"});"
 								],
@@ -343,7 +345,7 @@
 					"response": []
 				},
 				{
-					"name": "Get Empleado id=NO ENCONTRADO",
+					"name": "Get Empleado id=1000 No Existe",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -375,11 +377,8 @@
 									"});",
 									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
 									"     pm.test(\"Validate ID=1000 not Exist\", function(){",
-									"//Arrays de los id's",
 									"         var numerodeID= response.json().length;",
-									"         if(numerodeID-1<1000){",
 									"             pm.expect(response.json().length).is.lessThan(1000);",
-									"         }",
 									"     });",
 									"});",
 									" "
@@ -443,7 +442,7 @@
 									"});",
 									"",
 									"//Checkear el id del empleado ",
-									"pm.test(\"Validate ID_NOT_Number\",function(){",
+									"pm.test(\"ID_NOT_Number\",function(){",
 									"    pm.expect(response.id).not.to.be.a(\"number\");",
 									"});",
 									""
@@ -485,13 +484,15 @@
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
+									"pm.test(\"Status code is 200, Edited\", function () {",
+									"       pm.response.to.have.status(200);",
+									"});",
 									"",
 									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
 									"    //Empleado nuevo que se añade",
 									"    var response2 = pm.response.json();",
 									"    //Test para validar la edicion",
-									"     pm.test(\"Validate Edited Employe\", function(){",
-									"          pm.response.to.have.status(200);",
+									"     pm.test(\"Validate Edited Employe\", function(){  ",
 									"         //For para ver si los campos editados existen en el Json",
 									"        for(var i=0; i<response.length;i++){",
 									"                //Verifico la Edicion",
@@ -625,21 +626,6 @@
 					"name": "Editar Empleado id=nulo",
 					"event": [
 						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"//Test para validar la url",
-									"var urlglobal = pm.environment.get(\"url\");",
-									"pm.test(\"Validate URL - PATH\", function(){",
-									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
-									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
-									"pm.expect(pm.request.url.getPath()).to.eql(\"/putEmpleadosbyId\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
 							"listen": "test",
 							"script": {
 								"exec": [
@@ -651,7 +637,25 @@
 									"pm.test(\"Status code is 400, Id no existe\", function () {",
 									"    pm.response.to.have.status(400);",
 									"});",
-									""
+									"//Checkear el id del empleado ",
+									"pm.test(\"Validate ID Is Undefined\",function(){",
+									"    pm.expect(response.id).to.eql(undefined);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Test para validar la url",
+									"var urlglobal = pm.environment.get(\"url\");",
+									"pm.test(\"Validate URL - PATH\", function(){",
+									"pm.expect(urlglobal).to.eql(\"localhost:8080\");",
+									"pm.expect(pm.request.url.getRemote()).to.eql(\"{{url}}\");",
+									"pm.expect(pm.request.url.getPath()).to.eql(\"/putEmpleadosbyId\");",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -711,11 +715,8 @@
 									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
 									"   // console.log(\"response\",response.json()[0]);",
 									"     pm.test(\"Validate ID=111 not Exist\", function(){",
-									"//Arrays de los id's",
 									"         var numerodeID= response.json().length;",
-									"         if(numerodeID-1<111){",
 									"             pm.expect(response.json().length).is.lessThan(111);",
-									"         }",
 									"     });",
 									"});"
 								],
@@ -757,18 +758,18 @@
 									"    pm.response.to.be.withBody;",
 									"    pm.response.to.be.json;",
 									"});",
-									"",
+									"pm.test(\"Status code is 201, Employe Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
 									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
 									"    //Empleado nuevo que se añade",
 									"    var response2 = pm.response.json();",
 									"    //Test para validar creacion",
-									"     pm.test(\"Validate Created Employe and Status 201\", function(){",
-									"          pm.response.to.have.status(201);",
+									"     pm.test(\"Validate Created Employe\", function(){",
 									"         //For para ver si el dni esta incluido en el json",
-									"        for(var i=0; i<response.length;i++){",
+									"        for(var i=0; i<response.json().length;i++){",
 									"                //Busco si existe el dni del empleado creado",
-									"            pm.expect(response[i].dni).include(response2.dni);",
-									"",
+									"            pm.expect(response.json()[i].dni == response2.dni);",
 									"         }",
 									"",
 									"     });",
@@ -799,7 +800,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\n\"dni\": \"3310\",\n\"nombre\": \"nombre nuevo2\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
+							"raw": "{\n\n\"dni\": \"3362\",\n\"nombre\": \"nombre nuevo2\",\n\"apellido\": \"apellido nuevo\",\n\"edad\": 55,\n\"direccion\": \"direccion nuevo\",\n\"rol\": 3,\n\"salario\": 1555\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -892,10 +893,13 @@
 									"});",
 									"",
 									"pm.sendRequest(\"localhost:8080/getEmpleados\", function (err, response) {",
-									"     pm.test(\"Validate Created Employe Duplicate\", function(){",
+									"",
+									"    var response2 = pm.response.json();",
+									"",
+									"     pm.test(\"Validate Employe Duplicate\", function(){",
 									"        for(var i=0; i<response.json().length;i++){",
 									"            //Verifico que ya existe ese dni",
-									"            pm.expect(response.json()[i].dni =='11111139');",
+									"            pm.expect(response.json()[i].dni == response2.dni);",
 									"         }",
 									"     });",
 									"});"
@@ -924,7 +928,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": 2,\n    \"dni\": \"11111139\",\n    \"nombre\": \"nombre modificado\",\n    \"apellido\": \"apellido modificado\",\n    \"edad\": 33,\n    \"direccion\": \"direccion modificado\",\n    \"rol\": 1,\n    \"salario\": 12222\n}",
+							"raw": "{\n    \"id\": 1,\n    \"dni\": \"11111111\",\n    \"nombre\": \"Juice 1\",\n    \"apellido\": \"apellido 1\",\n    \"edad\": 20,\n    \"direccion\": \"avenida 1\",\n    \"rol\": 1,\n    \"salario\": 1000\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1139,11 +1143,8 @@
 									"    var response2 = pm.response.json();",
 									"    //Test para validar si existe el emplado con ese ID",
 									"     pm.test(\"Validate Employe Not Exist Id=111\", function(){",
-									"//Arrays de los id's",
 									"         var numerodeID= response.json().length;",
-									"         if(numerodeID-1<111){",
 									"             pm.expect(response.json().length).is.lessThan(111);",
-									"         }",
 									"     });",
 									"});",
 									"",
